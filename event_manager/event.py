@@ -2,9 +2,31 @@ from datetime import datetime
 
 from flask import request, jsonify
 from flask_restful import Resource
+from sqlalchemy import and_
 
-from event_manager.models import db
 from event_manager.models import Event
+from event_manager.models import db
+
+filter_dict = {
+    'id': Event.id,
+    'location': Event.location,
+    'start_date': Event.date,
+    'end_date': Event.date,
+    'popularity': Event.popularity,
+    'title': Event.title,
+}
+
+
+def get_json_evens(events):
+    if not events:
+        return jsonify({"message": "Events not found"})
+    result_dict = []
+    for event in events:
+        print(f'event: {event}')
+        d = dict(event.__dict__)
+        d.pop('_sa_instance_state')
+        result_dict.append(d)
+    return jsonify(result_dict)
 
 
 class EventResource(Resource):
@@ -24,22 +46,26 @@ class EventResource(Resource):
 
     @staticmethod
     def get():
-        event_id = request.args.get('id')
-        if event_id:
-            event = Event.query.filter_by(id=event_id).first()
-            if event is None:
-                return jsonify({"message": "Event not found"})
-            result_dict = dict(event.__dict__)
-            result_dict.pop('_sa_instance_state')
-            return jsonify(result_dict)
+        filters = []
+        query_parameters = ['id', 'location', 'title', 'start_date', 'end_date', 'popularity']
+        for param in query_parameters:
+            value = request.args.get(param)
+            if value:
+                print(param, value)
+                if param in ['start_date', 'end_date']:
+                    if param == 'start_date':
+                        event_date = Event.date >= value
+                    else:
+                        event_date = Event.date <= value
+                    filters.append(event_date)
+                else:
+                    filters.append(filter_dict[param] == value)
+        if filters:
+            events = Event.query.filter(*filters).all()
+            return get_json_evens(events)
         else:
             events = Event.query.all()
-            result = []
-            for event in events:
-                result_dict = dict(event.__dict__)
-                result_dict.pop('_sa_instance_state')
-                result.append(result_dict)
-            return jsonify(result)
+            return get_json_evens(events)
 
     @staticmethod
     def put():

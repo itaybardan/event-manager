@@ -4,6 +4,7 @@ from flask import Flask
 from flask_restful import Api
 from flask_socketio import SocketIO
 from event_manager.event import EventResource
+from event_manager.sort_by import SortByResource
 from event_manager.models import db
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -20,6 +21,7 @@ with app.app_context():
 
 def init_resources():
     api.add_resource(EventResource, '/events')
+    api.add_resource(SortByResource, '/sort_by/<string:sort_by>')
 
 
 init_resources()
