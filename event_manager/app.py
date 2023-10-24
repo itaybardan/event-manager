@@ -10,7 +10,6 @@ from event_manager import CONFIG
 from event_manager.api.event import EventResource, BulkEventsResource
 from event_manager.api.sort_by import SortByResource
 from event_manager.api.subscribe import SubscribeResource, scheduler
-from event_manager.celery_workers import mail
 from event_manager.models import db
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -37,7 +36,6 @@ app.config['MAIL_SERVER'] = CONFIG.smtp.ip
 app.config['MAIL_PORT'] = CONFIG.smtp.port
 app.config['MAIL_DEFAULT_SENDER'] = CONFIG.smtp.default_sender
 
-mail.init_app(app)
 if scheduler.running:
     scheduler.shutdown()
 scheduler.init_app(app)
