@@ -21,7 +21,6 @@ def get_json_evens(events):
         return jsonify({"message": "Events not found"})
     result_dict = []
     for event in events:
-        print(f'event: {event}')
         d = dict(event.__dict__)
         d.pop('_sa_instance_state')
         result_dict.append(d)
@@ -50,7 +49,6 @@ class EventResource(Resource):
         for param in query_parameters:
             value = request.args.get(param)
             if value:
-                print(param, value)
                 if param in ['start_date', 'end_date']:
                     if param == 'start_date':
                         event_date = Event.date >= value
@@ -126,4 +124,3 @@ class BulkEventsResource(Resource):
             db.session.delete(event)
         db.session.commit()
         return jsonify({"message": "Events deleted successfully"})
-

@@ -1,7 +1,8 @@
 from flask import jsonify
 from flask_restful import Resource
-from event_manager.models import Event
+
 from event_manager.api.event import get_json_evens
+from event_manager.models import Event
 
 
 class SortByResource(Resource):

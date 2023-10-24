@@ -1,7 +1,7 @@
 import unittest
 
 from event_manager.app import app
-from event_manager.models import db, Event
+from event_manager.models import Event
 
 
 class TestGetEvents(unittest.TestCase):

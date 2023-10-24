@@ -1,17 +1,14 @@
+import atexit
 import logging
 from datetime import timedelta, datetime
-import atexit
 
 from flask import jsonify, request
+from flask_apscheduler import APScheduler
+from flask_mail import Mail
 from flask_restful import Resource
 
 from event_manager.models import Event
-import logging
-from flask_apscheduler import APScheduler
-from flask_mail import Mail
-import smtplib
 
-from event_manager.models import Event
 scheduler = APScheduler()
 scheduler.start()
 # host = "localhost"
@@ -23,7 +20,6 @@ atexit.register(lambda: scheduler.shutdown())
 
 
 def send_email_notification(event_id, user_email):
-
     with scheduler.app.app_context():
         logging.info(f'Sending email to {user_email} for event {event_id}')
 
