@@ -56,8 +56,8 @@ class SubscribeResource(Resource):
         # Calculate the time to send the email (30 minutes before the event)
         event_start_time = event.date
         email_send_time = event_start_time - timedelta(minutes=30)
-        # temp just for testing
-        email_send_time = datetime.now() + timedelta(seconds=5)
+        if email_send_time < datetime.now():
+            return jsonify({"message": "Event already passed"})
         logging.info(f'Email will be sent at {email_send_time}')
         scheduler.add_job(
             id=f'{event_id}-{email}-{datetime.now()}',

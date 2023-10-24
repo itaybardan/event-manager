@@ -114,13 +114,14 @@ class BulkEventsResource(Resource):
         data = request.get_json()
         if not isinstance(data, list):
             return jsonify({"message": "Invalid data format"})
-        for event_data in data:
-            event_id = event_data.get('id', None)
-            if not event_id:
-                return jsonify({"message": "Event id not provided"})
+        if not data:
+            return jsonify({"message": "Empty list"})
+        deleted_ids = []
+        for event_id in data:
             event = Event.query.filter_by(id=event_id).first()
             if not event:
-                return jsonify({"message": "Event not found"})
+                continue
+            deleted_ids.append(event_id)
             db.session.delete(event)
         db.session.commit()
-        return jsonify({"message": "Events deleted successfully"})
+        return jsonify({"message": "Events deleted successfully", "deleted_ids": deleted_ids})

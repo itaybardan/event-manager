@@ -34,16 +34,13 @@ with app.app_context():
 
 app.config['MAIL_SERVER'] = 'localhost'
 app.config['MAIL_PORT'] = 2500  # smtp port
-# app.config['MAIL_USE_TLS'] = False  # just for simplicity use TLS
-# app.config['MAIL_USERNAME'] = 'event-manager'
-# app.config['MAIL_PASSWORD'] = '*****'
 app.config['MAIL_DEFAULT_SENDER'] = 'event-manager@example.com'
 
 mail.init_app(app)
 if scheduler.running:
     scheduler.shutdown()
 scheduler.init_app(app)
-scheduler.start()  # Start the scheduler
+scheduler.start()
 
 
 def init_resources():
