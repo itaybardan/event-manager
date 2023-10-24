@@ -6,6 +6,7 @@ from flask_limiter.util import get_remote_address
 from flask_restful import Api
 from flask_socketio import SocketIO
 
+from event_manager import CONFIG
 from event_manager.api.event import EventResource, BulkEventsResource
 from event_manager.api.sort_by import SortByResource
 from event_manager.api.subscribe import SubscribeResource, scheduler
@@ -32,9 +33,9 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-app.config['MAIL_SERVER'] = 'localhost'
-app.config['MAIL_PORT'] = 2500  # smtp port
-app.config['MAIL_DEFAULT_SENDER'] = 'event-manager@example.com'
+app.config['MAIL_SERVER'] = CONFIG.smtp.ip
+app.config['MAIL_PORT'] = CONFIG.smtp.port
+app.config['MAIL_DEFAULT_SENDER'] = CONFIG.smtp.default_sender
 
 mail.init_app(app)
 if scheduler.running:

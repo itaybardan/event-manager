@@ -11,8 +11,6 @@ from event_manager.models import Event
 
 scheduler = APScheduler()
 scheduler.start()
-# host = "localhost"
-# server = smtplib.SMTP(host)
 
 mail = Mail()
 # Shut down the scheduler when exiting the app

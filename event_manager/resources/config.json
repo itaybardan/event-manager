@@ -6,5 +6,10 @@
     "log": {
         "level": "INFO",
         "format": "%(asctime)s [%(levelname)s] - %(message)s"
+    },
+    "smtp": {
+        "port":2500,
+        "ip": "localhost",
+        "default_sender": "event-manager@example.com"
     }
 }
