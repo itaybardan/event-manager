@@ -11,6 +11,16 @@ flask-restful = "*"
 flask-limiter = "*"
 flask-socketio = "*"
 dotmap = "*"
+celery = "*"
+flask-mail = "*"
+flask-login = "*"
+flask-security = "*"
+redis = "*"
+gunicorn = "*"
+gevent = "*"
+gevent-websocket = "*"
+apscheduler = "*"
+flask-apscheduler = "*"
 
 [dev-packages]
 

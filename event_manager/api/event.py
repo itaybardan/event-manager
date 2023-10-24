@@ -2,7 +2,6 @@ from datetime import datetime
 
 from flask import request, jsonify
 from flask_restful import Resource
-from sqlalchemy import and_
 
 from event_manager.models import Event
 from event_manager.models import db
@@ -92,3 +91,39 @@ class EventResource(Resource):
         db.session.delete(event)
         db.session.commit()
         return jsonify({"message": "Event deleted successfully"})
+
+
+class BulkEventsResource(Resource):
+    @staticmethod
+    def post():
+        data = request.get_json()
+        if not isinstance(data, list):
+            return jsonify({"message": "Invalid data format"})
+        for event_data in data:
+            new_event = Event(
+                title=event_data['title'],
+                location=event_data['location'],
+                # convert string to python date object
+                date=datetime.date(datetime.strptime(event_data['date'], '%Y-%m-%d')),
+                popularity=event_data['popularity']
+            )
+            db.session.add(new_event)
+        db.session.commit()
+        return jsonify({"message": "Events scheduled successfully"})
+
+    @staticmethod
+    def delete():
+        data = request.get_json()
+        if not isinstance(data, list):
+            return jsonify({"message": "Invalid data format"})
+        for event_data in data:
+            event_id = event_data.get('id', None)
+            if not event_id:
+                return jsonify({"message": "Event id not provided"})
+            event = Event.query.filter_by(id=event_id).first()
+            if not event:
+                return jsonify({"message": "Event not found"})
+            db.session.delete(event)
+        db.session.commit()
+        return jsonify({"message": "Events deleted successfully"})
+
